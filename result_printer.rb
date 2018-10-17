@@ -93,7 +93,4 @@ class ResultPrinter
   def cls
     system("clear") || system("cls")
   end
-
-  # Обратите внимание, что без псевдографики класс ResultPrinter стал короче
-  # почти на 100 строк. Ещё раз напомним, что длинные строки в коде — это плохо!
 end

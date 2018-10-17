@@ -49,7 +49,7 @@ class Game
   # Основной метод игры "сделать следующий шаг". В качестве параметра принимает
   # букву, которую ввел пользователь. Основная логика взята из метода
   # check_user_input (см. первую версию программы).
-  def next_step(bukva)
+  def next_step(letter)
     # Предварительная проверка: если статус игры равен 1 или -1, значит игра
     # закончена и нет смысла дальше делать шаг. Выходим из метода возвращая
     # пустое значение.
@@ -59,31 +59,30 @@ class Game
 
     # Если введенная буква уже есть в списке "правильных" или "ошибочных" букв,
     # то ничего не изменилось, выходим из метода.
-    if @good_letters.include?(bukva) || @bad_letters.include?(bukva)
+    if @good_letters.include?(letter) || @bad_letters.include?(letter)
       return
     end
 
-    if @letters.include?(bukva) ||
-        (bukva == "е" && letters.include?("ё")) ||
-        (bukva == "ё" && letters.include?("е")) ||
-        (bukva == "и" && letters.include?("й")) ||
-        (bukva == "й" && letters.include?("и"))
+    if @letters.include?(letter) ||
+        (letter == "е" && letters.include?("ё")) ||
+        (letter == "ё" && letters.include?("е")) ||
+        (letter == "и" && letters.include?("й")) ||
+        (letter == "й" && letters.include?("и"))
       # Если в слове есть буква запишем её в число "правильных" буква
-      @good_letters << bukva
-
-      if bukva == "е"
+      @good_letters << letter
+      if letter == "е"
         good_letters << "ё"
       end
 
-      if bukva == "ё"
+      if letter == "ё"
         good_letters << "е"
       end
 
-      if bukva == "и"
+      if letter == "и"
         good_letters << "й"
       end
 
-      if bukva == "й"
+      if letter == "й"
         good_letters << "и"
       end
 
@@ -95,7 +94,7 @@ class Game
     else
       # Если в слове нет введенной буквы — добавляем эту букву в массив
       # «плохих» букв и увеличиваем счетчик ошибок.
-      @bad_letters << bukva
+      @bad_letters << letter
       @errors += 1
 
       # Если ошибок больше 7 — статус игры меняем на -1, проигрыш.
