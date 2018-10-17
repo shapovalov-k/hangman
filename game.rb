@@ -64,10 +64,10 @@ class Game
     end
 
     if @letters.include?(bukva) ||
-      (bukva == "е" && letters.include?("ё")) ||
-      (bukva == "ё" && letters.include?("е")) ||
-      (bukva == "и" && letters.include?("й")) ||
-      (bukva == "й" && letters.include?("и"))
+        (bukva == "е" && letters.include?("ё")) ||
+        (bukva == "ё" && letters.include?("е")) ||
+        (bukva == "и" && letters.include?("й")) ||
+        (bukva == "й" && letters.include?("и"))
       # Если в слове есть буква запишем её в число "правильных" буква
       @good_letters << bukva
 

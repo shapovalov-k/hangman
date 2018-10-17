@@ -40,9 +40,9 @@ class ResultPrinter
     end
   end
 
-  # Метод print_viselitsa будет рисовать виселицу, соответствующую текущему
+  # Метод print_hangman будет рисовать виселицу, соответствующую текущему
   # количеству ошибок. Единственнй параметро этого метода — целое число errors.
-  def print_viselitsa(errors)
+  def print_hangman(errors)
     # Так как ранее (в конструкторе) мы все картинки загрузили в массив
     # @status_image, сейчас чтобы вывести на экран нужную виселицу, достаточно
     # в качестве параметра puts указать нужный элемент этого массива.
@@ -58,9 +58,9 @@ class ResultPrinter
     puts "Слово: #{get_word_for_print(game.letters, game.good_letters)}"
     puts "Ошибки: #{game.bad_letters.join(", ")}"
 
-    # Обратите внимание, что вызов метода print_viselitsa никак не поменялся,
+    # Обратите внимание, что вызов метода print_hangman никак не поменялся,
     # поменялась только его реализация.
-    print_viselitsa(game.errors)
+    print_hangman(game.errors)
 
     if game.status == -1
       puts
