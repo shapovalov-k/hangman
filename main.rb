@@ -1,9 +1,11 @@
 # encoding: utf-8
 #
-# Популярная детская игра
+# Hangman is a classic paper and pencil guessing game in which you must guess the word before you hang.
+#
+# https://en.wikipedia.org/wiki/Hangman_(game)
 # https://ru.wikipedia.org/wiki/Виселица_(игра)
 #
-# Этот код необходим только при использовании русских букв на Windows
+# This block of code is necessary only when using cyrillic letters on Windows.
 if Gem.win_platform?
   Encoding.default_external = Encoding.find(Encoding.locale_charmap)
   Encoding.default_internal = __ENCODING__
@@ -13,21 +15,20 @@ if Gem.win_platform?
   end
 end
 
-# Подключаем классы Game, ResultPrinter и WordReader
-require_relative "game"
-require_relative "result_printer"
-require_relative "word_reader"
+VERSION = " Game 'Hangman', version 0.1. (c) shapovalov-k"
+
+current_path = "./" + File.dirname(__FILE__)
+
 require "unicode"
+require current_path + "/lib/game.rb"
+require current_path + "/lib/result_printer.rb"
+require current_path + "/lib/word_reader.rb"
 
-printer = ResultPrinter.new
-
-# Создаем экземпляр класса Word который мы будет использовать для
-# вывода информации на экран.
 word_reader = WordReader.new
 
 # Соберем путь к файлу со словами из пути к файлу, где лежит программа и
 # относительно пути к файлу words.txt.
-words_file_name = File.dirname(__FILE__) + "/data/words.txt"
+words_file_name = current_path + "/data/words.txt"
 
 # Создаем объект класса Game, вызывая конструктор и передавая ему слово, которое
 # вернет метод read_from_file экземпляра класса WordReader.
@@ -38,7 +39,10 @@ else
   game = Game.new(word_reader.read_from_file(words_file_name))
 end
 
-while game.status == 0
+game.version = VERSION
+printer = ResultPrinter.new(game)
+
+while game.in_progress? do
   printer.print_status(game)
   game.ask_next_letter
 end

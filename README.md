@@ -26,6 +26,6 @@ You can modify the list of words in */data/words.txt*
 To run this game download all files from [here](https://github.com/shapovalov-k/hangman) on your PC and enter this line in the terminal from the folder with the game.
 
 ```
-ruby hangman.rb your_name
+ruby main.rb your_name
 ```
 

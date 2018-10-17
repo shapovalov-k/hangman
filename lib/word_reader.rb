@@ -9,6 +9,7 @@ class WordReader
   # качестве отедльного метода read_from_args для обратной совместимости.
   def read_from_args
     word = ARGV[0]
+
     if word == nil || word == ""
       return
     else
@@ -30,8 +31,7 @@ class WordReader
       abort "Файл не найден."
     end
 
-    # Возвращаем случайную строчку (слово) из прочитанного массива, не забывая
-    # удалить в конце символ перевода строки методом chomp.
+    # Возвращаем случайную строчку (слово) из прочитанного массива.
     return Unicode.downcase(lines.sample.chomp)
   end
 end

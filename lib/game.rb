@@ -6,14 +6,19 @@
 # За основу взяты методы из первой версии этой игры (подробные комментарии
 # смотрите в прошлых уроках).
 class Game
+  attr_reader :errors, :letters, :good_letters, :bad_letters, :status
+  attr_accessor :version
+
+  MAX_ERRORS = 7
+
   # Конструктор — вызывается всегда при создании объекта данного класса имеет
   # один параметр, в него нужно передавать при создании строку к загаданнмы
   # словом. Например, game = Game.new('молоко').
-  def initialize(slovo)
+  def initialize(word)
     # Инициализируем переменные экземпляра. В @letters будет лежать массив букв
     # загаданного слова. Для того, чтобы его создать, вызываем метод get_letters
     # этого же класса.
-    @letters = get_letters(slovo)
+    @letters = get_letters(word)
 
     # Переменная @errors будет хранить текущее количество ошибок, всего можно
     # сделать не более 7 ошибок. Начальное значение — 0.
@@ -25,82 +30,94 @@ class Game
     @bad_letters = []
 
     # Специальная переменная-индикатор состояния игры (см. метод get_status)
-    @status = 0
+    @status = :in_progress # :won, :lost
   end
 
   # Метод, который возвращает массив букв загаданного слова
-  def get_letters(slovo)
-    if slovo == nil || slovo == ""
+  def get_letters(word)
+    if word == nil || word == ""
       abort "Загадано пустое слово, нечего отгадывать. Закрываемся"
     end
 
-    return slovo.encode('UTF-8').split("")
+    word.encode('UTF-8').split("")
   end
 
-  # Метод, возвращающий статус игры (геттер для @status)
-  #
-  #  0 – игра активна
-  # -1 – игра закончена поражением
-  #  1 – игра закончена победой
-  def status
-    return @status
+  def max_errors
+    MAX_ERRORS
+  end
+
+  def errors_left
+    MAX_ERRORS - @errors
+  end
+
+
+  def is_good?(letter)
+    @letters.include?(letter) ||
+        (letter == "е" && @letters.include?("ё")) ||
+        (letter == "ё" && @letters.include?("е")) ||
+        (letter == "и" && @letters.include?("й")) ||
+        (letter == "й" && @letters.include?("и"))
+  end
+
+  def add_letter_to(letters, letter)
+    # Если в слове есть буква запишем её в число "правильных" буква
+    letters << letter
+
+    case letter
+    when "е" then letters << "ё"
+    when "ё" then letters << "е"
+    when "и" then letters << "й"
+    when "й" then letters << "и"
+    end
+  end
+
+  def solved?
+    (@letters - @good_letters).empty?
+  end
+
+  def repeated?(letter)
+    @good_letters.include?(letter) || @bad_letters.include?(letter)
+  end
+
+  def lost?
+    @status == :lost || @errors >= MAX_ERRORS
+  end
+
+  def in_progress?
+    @status == :in_progress
+  end
+
+  def won?
+    @status = :won
   end
 
   # Основной метод игры "сделать следующий шаг". В качестве параметра принимает
-  # букву, которую ввел пользователь. Основная логика взята из метода
-  # check_user_input (см. первую версию программы).
+  # букву, которую ввел пользователь.
   def next_step(letter)
     # Предварительная проверка: если статус игры равен 1 или -1, значит игра
     # закончена и нет смысла дальше делать шаг. Выходим из метода возвращая
     # пустое значение.
-    if @status == -1 || @status == 1
-      return
-    end
+    return if @status == :lost || @status == :won
 
     # Если введенная буква уже есть в списке "правильных" или "ошибочных" букв,
     # то ничего не изменилось, выходим из метода.
-    if @good_letters.include?(letter) || @bad_letters.include?(letter)
-      return
-    end
+    return if repeated?(letter)
 
-    if @letters.include?(letter) ||
-        (letter == "е" && letters.include?("ё")) ||
-        (letter == "ё" && letters.include?("е")) ||
-        (letter == "и" && letters.include?("й")) ||
-        (letter == "й" && letters.include?("и"))
-      # Если в слове есть буква запишем её в число "правильных" буква
-      @good_letters << letter
-      if letter == "е"
-        good_letters << "ё"
-      end
-
-      if letter == "ё"
-        good_letters << "е"
-      end
-
-      if letter == "и"
-        good_letters << "й"
-      end
-
-      if letter == "й"
-        good_letters << "и"
-      end
-
+    if is_good?(letter)
+      add_letter_to(@good_letters, letter)
       # Дополнительная проверка — угадано ли на этой букве все слово целиком.
       # Если да — меняем значение переменной @status на 1 — победа.
-      if (@letters - @good_letters).empty?
-        @status = 1
-      end
+      @status = :won if solved?
+
     else
       # Если в слове нет введенной буквы — добавляем эту букву в массив
       # «плохих» букв и увеличиваем счетчик ошибок.
-      @bad_letters << letter
+      add_letter_to(@bad_letters, letter)
+
       @errors += 1
 
       # Если ошибок больше 7 — статус игры меняем на -1, проигрыш.
-      if @errors >= 7
-        @status = -1
-      end
+      @status = :lost if lost?
     end
   end
 
@@ -128,17 +145,5 @@ class Game
     # Важная фишка Ruby: слово return можно опустить, если это последняя строка
     # в методе. Последнее вычисленное значение в методе и будет возвращено.
     @errors
-  end
-
-  def letters
-    @letters
-  end
-
-  def good_letters
-    @good_letters
-  end
-
-  def bad_letters
-    @bad_letters
   end
 end
