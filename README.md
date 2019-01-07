@@ -32,7 +32,7 @@ bundle install
 You can modify the list of words in */data/words.txt*
 
 
-Launch game :
+Launch the game :
 
 ```
 bundle exec ruby main.rb
