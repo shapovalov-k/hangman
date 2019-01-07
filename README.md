@@ -13,7 +13,7 @@ The guessing player has 7 attempts to guess the word and loses the game when the
 ***
 *Usage*
 
-To play this game download all files from [here](https://github.com/shapovalov-k/hangman) on your PC or clone 'Hangman' on your PC :
+To play this game download all files from [here](https://github.com/shapovalov-k/hangman) on your PC or clone 'Hangman':
 
 ```
 git clone https://github.com/shapovalov-k/hangman
